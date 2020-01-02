@@ -1,0 +1,27 @@
+service: feature-toggle
+
+provider:
+  name: aws
+  runtime: go1.x
+  region: eu-west-1
+  stage: ${opt:stage, 'production'}
+
+package:
+ exclude:
+   - ./**
+ include:
+   - ./bin/**
+
+functions:
+  get:
+    handler: bin/cmd
+    memorySize: 128
+    timeout: 10
+    events:
+      - http:
+          path: get
+          method: get
+          request:
+            parameter:
+              paths:
+                name: true
