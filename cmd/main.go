@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"net/http"
+	"os"
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
@@ -21,7 +22,8 @@ type contactv2 struct {
 }
 
 func list() (events.APIGatewayProxyResponse, error) {
-	client := configcat.NewClient("xo3XCMN_VBUpBgClZDtwRg/AUchlGKbjkGc-zqA-DHtcg")
+	configCatAPIKey := os.Getenv("CONFIGCAT_APIKEY")
+	client := configcat.NewClient(configCatAPIKey)
 
 	isEnabled, _ := client.GetValue("enabled", false).(bool)
 	isVersion2, _ := client.GetValue("version2", false).(bool)

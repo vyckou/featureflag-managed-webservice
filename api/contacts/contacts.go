@@ -1,18 +1,20 @@
 package contacts
 
 import (
+	configcat "gopkg.in/configcat/go-sdk.v1"
 	"net/http"
-	"gopkg.in/configcat/go-sdk.v1"
+	"os"
 )
 
 func List(w http.ResponseWriter, r *http.Request) {
-	client := configcat.NewClient("xo3XCMN_VBUpBgClZDtwRg/AUchlGKbjkGc-zqA-DHtcg")
+	configCatAPIKey := os.Getenv("CONFIGCAT_APIKEY")
+	client := configcat.NewClient(configCatAPIKey)
 
 	isEnabled, _ := client.GetValue("enabled", false).(bool)
 	//isVersion1, _ := client.GetValue("version1", false).(bool)
 	isVersion2, _ := client.GetValue("version2", false).(bool)
 
-	if ! isEnabled {
+	if !isEnabled {
 		w.Write([]byte("Not Implemented"))
 		w.WriteHeader(501)
 		return
@@ -29,13 +31,12 @@ func List(w http.ResponseWriter, r *http.Request) {
 	return
 }
 
-func responseV1(w http.ResponseWriter)(http.ResponseWriter){
+func responseV1(w http.ResponseWriter) http.ResponseWriter {
 	w.Write([]byte("Enabled"))
 	return w
 }
 
-func responseV2(w http.ResponseWriter)(http.ResponseWriter){
+func responseV2(w http.ResponseWriter) http.ResponseWriter {
 	w.Write([]byte("{\"accounts\": [\"A\", \"B\"]}"))
 	return w
 }
-
